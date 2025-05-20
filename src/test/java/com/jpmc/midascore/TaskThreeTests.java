@@ -1,5 +1,6 @@
 package com.jpmc.midascore;
 
+import com.jpmc.midascore.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @DirtiesContext
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
+@ActiveProfiles("test")
 public class TaskThreeTests {
     static final Logger logger = LoggerFactory.getLogger(TaskThreeTests.class);
 
@@ -22,6 +25,9 @@ public class TaskThreeTests {
 
     @Autowired
     private FileLoader fileLoader;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void task_three_verifier() throws InterruptedException {

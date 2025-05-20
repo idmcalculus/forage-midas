@@ -8,6 +8,21 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  datasource:
+    url: jdbc:h2:mem:midasdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update # In a real app, consider 'validate' for prod and 'create-drop' or 'update' for dev/test
+    show-sql: true # Good for debugging, can be set to false or removed for production
+
 ---
 spring:
   config:
@@ -15,6 +30,13 @@ spring:
       on-profile: test
   kafka:
     bootstrap-servers: ${spring.embedded.kafka.brokers}
+    consumer:
+      group-id: midas-core-test-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.jpmc.midascore.foundation"
 
 general:
   kafka-topic: test-transactions
